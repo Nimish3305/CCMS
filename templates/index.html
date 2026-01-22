@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cyber Cafe Management — Login</title>
+  <style>
+    :root {
+      --bg:#0b0f14; --panel:#121722; --muted:#98a2b3; --text:#e6eaf2;
+      --brand:#4ade80; --accent:#22d3ee; --danger:#ef4444; --ring:rgba(34,211,238,0.35);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,Segoe UI,Roboto,Arial;background:
+      radial-gradient(1000px 600px at 10% -10%, rgba(34,211,238,0.12), transparent),
+      radial-gradient(800px 500px at 110% 10%, rgba(74,222,128,0.10), transparent),
+      var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
+    header{background:rgba(9,13,18,0.75);backdrop-filter:blur(10px);border-bottom:1px solid #1f2937}
+    .nav{max-width:1100px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
+    .brand{font-weight:700}
+    main{flex:1}
+    .wrap{max-width:1100px;margin:28px auto;padding:0 20px}
+    .panel{background:linear-gradient(180deg, rgba(255,255,255,0.03), transparent),var(--panel);
+      border:1px solid #1f2937;border-radius:16px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,0.25)}
+    form{display:grid;gap:14px}
+    .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+    label{font-size:13px;color:var(--muted)}
+    input,select{width:100%;padding:12px;border-radius:12px;border:1px solid #233045;background:#0b1220;color:var(--text)}
+    input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--ring)}
+    .actions{display:flex;gap:10px}
+    button{border:1px solid #1f2937;background:#0f172a;color:var(--text);padding:10px 14px;border-radius:12px;cursor:pointer}
+    button.primary{background:linear-gradient(90deg,var(--accent),var(--brand));color:#04131a;border:none}
+    .muted{color:var(--muted)}
+    .tabs{display:flex;gap:8px}
+    .tab{background:#0f172a;border:1px solid #1f2937;padding:10px 14px;border-radius:10px;cursor:pointer}
+    .tab.active{border-color:var(--accent);box-shadow:0 0 0 3px var(--ring)}
+    .result{margin-top:12px;padding:12px;border-radius:10px;border:1px dashed #334155;background:#0b1220}
+    .error{border-color:var(--danger);color:#fecaca}
+    .success{border-color:#14532d;color:#bbf7d0}
+    footer{text-align:center;color:var(--muted);padding:18px 10px;font-size:12px}
+    .top-right{display:flex;gap:8px;align-items:center}
+
+    /* Glowing Blue Row Table (one table per object) */
+    .table-glow {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 10px 0;
+      font-family: Inter, Arial, sans-serif;
+      color: #e6eaf2;
+      box-shadow: 0 6px 30px rgba(2,6,23,0.6);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .table-glow thead th {
+      background: linear-gradient(90deg, rgba(34,211,238,0.04), rgba(74,222,128,0.02));
+      color: #22d3ee;
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 2px solid rgba(34,211,238,0.08);
+    }
+    .table-glow tbody td {
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
+      padding: 10px 12px;
+      border: 1px solid rgba(34,211,238,0.06);
+    }
+    .table-row-pair { display: grid; grid-template-columns: 40% 60%; gap: 0; }
+    .table-row-pair .k { padding: 8px 12px; border: 1px solid rgba(34,211,238,0.06); background: #0f172a; color: #22d3ee; font-weight:600; }
+    .table-row-pair .v { padding: 8px 12px; border: 1px solid rgba(34,211,238,0.06); background: #0b1220; color: var(--text); }
+
+    /* error/success box accents */
+    .result.success { box-shadow: 0 10px 30px rgba(34,197,94,0.06); border-left: 4px solid rgba(74,222,128,0.8); }
+    .result.error { box-shadow: 0 10px 30px rgba(239,68,68,0.06); border-left: 4px solid rgba(239,68,68,0.8); }
+
+    /* small helper */
+    .small-meta { font-size:13px; color:var(--muted); margin-top:8px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav">
+      <div class="brand">⚡ Cyber Cafe Management</div>
+      <div class="top-right" id="top-right"></div>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <section class="panel" id="panel-login">
+        <h2>Login</h2>
+        <p class="muted">Select role and sign in. Admins can manage customers, rates and bills. Customers get internet access.</p>
+
+        <form id="form-login">
+          <div class="row">
+            <div>
+              <label>Role</label>
+              <select name="role" id="role-select">
+                <option value="admin">Admin</option>
+                <option value="customer">Customer</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="admin-fields">
+            <div class="row">
+              <div>
+                <label>Username</label>
+                <input name="username" id="admin-username" placeholder="username" />
+              </div>
+              <div>
+                <label>Password</label>
+                <input type="password" name="password" id="admin-password" placeholder="password" />
+              </div>
+            </div>
+          </div>
+
+          <div id="customer-fields" style="display:none;">
+            <div class="row">
+              <div>
+                <label>Phone</label>
+                <input name="phone" id="cust-phone" placeholder="9999999999" />
+              </div>
+              <div>
+                <label>Password</label>
+                <input type="password" name="password" id="cust-password" placeholder="Customer password" />
+              </div>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button type="submit" class="primary">Sign In</button>
+          </div>
+        </form>
+
+        <div id="res-login" class="result" style="display:none;"></div>
+      </section>
+
+      <section class="panel" id="panel-access" style="display:none; margin-top:20px;">
+        <h2>Access Granted</h2>
+        <p class="muted" id="access-msg">You may start browsing. Click the button below to open Google.</p>
+        <div class="actions">
+          <button id="start-browse" class="primary">Start Browsing (Open Google)</button>
+          <button id="logout-btn-1">Logout</button>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-dashboard" style="display:none; margin-top:20px;">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <h2>Admin Dashboard</h2>
+            <p class="muted">Manage customers, rates and bills.</p>
+          </div>
+          <div>
+            <div class="tabs" id="dashboard-tabs">
+              <div class="tab active" data-tab="add">Add Customer</div>
+              <div class="tab" data-tab="rate">Set Rate</div>
+              <div class="tab" data-tab="bill">Generate Bill</div>
+              <div class="tab" data-tab="view">View Customer</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="dash-add" class="dash-panel" style="margin-top:16px;">
+          <form id="form-add">
+            <div class="row">
+              <div><label>Name</label><input required name="Customer_name" placeholder="Full name" /></div>
+              <div><label>Age</label><input required type="number" min="1" name="Age" placeholder="18" /></div>
+            </div>
+            <div class="row">
+              <div><label>Address</label><input required name="Address" placeholder="Street, City" /></div>
+              <div><label>Phone</label><input required name="Phone_no" placeholder="9999999999" /></div>
+            </div>
+            <div class="row">
+              <div><label>Email</label><input required type="email" name="Email_ID" placeholder="name@example.com" /></div>
+              <div><label>Password (set for customer)</label><input required name="Password" placeholder="customerPassword" /></div>
+            </div>
+            <div class="actions"><button class="primary" type="submit">Save Customer</button><button type="reset">Reset</button></div>
+          </form>
+          <div id="res-add" class="result" style="display:none;"></div>
+        </div>
+
+        <div id="dash-rate" class="dash-panel" style="display:none;margin-top:14px;">
+          <form id="form-rate">
+            <div class="row"><div><label>Rate (₹/min)</label><input required type="number" step="0.01" min="0.01" name="rate" placeholder="2.50" /></div></div>
+            <div class="actions"><button class="primary" type="submit">Save Rate</button><button type="reset">Reset</button></div>
+          </form>
+          <div id="res-rate" class="result" style="display:none;"></div>
+        </div>
+
+        <div id="dash-bill" class="dash-panel" style="display:none;margin-top:14px;">
+          <form id="form-bill">
+            <div class="row">
+              <div><label>Phone</label><input required name="Phone_no" placeholder="9999999999" /></div>
+              <div><label>Time Accessed (minutes)</label><input required type="number" min="1" name="Time_accessed_in_min" placeholder="30" /></div>
+            </div>
+            <div class="actions"><button class="primary" type="submit">Generate</button><button type="reset">Reset</button></div>
+          </form>
+          <div id="res-bill" class="result" style="display:none;"></div>
+        </div>
+
+        <div id="dash-view" class="dash-panel" style="display:none;margin-top:14px;">
+          <form id="form-view">
+            <div class="row"><div><label>Phone</label><input required name="phone" placeholder="9999999999" /></div></div>
+            <div class="actions"><button class="primary" type="submit">Search</button><button type="reset">Reset</button></div>
+          </form>
+          <div id="res-view" class="result" style="display:none;"></div>
+        </div>
+
+        <div style="margin-top:12px"><button id="logout-btn-2">Logout</button></div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer>Built for localhost • Data stored in MySQL <code>ccms</code></footer>
+
+  <script>
+    // --- Helper: safe fetch that always returns text + optional JSON ---
+    async function fetchSafe(url, opts = {}) {
+      const r = await fetch(url, opts);
+      const text = await r.text();
+      let json = null;
+      try { json = JSON.parse(text); } catch (e) { /* not json */ }
+      return { ok: r.ok, status: r.status, text, json };
+    }
+
+    // --- Convert object to ONE table (row format: key / value) ---
+    function renderRowTable(obj) {
+      // build table (key/value pairs)
+      const tbl = document.createElement('div');
+      tbl.className = 'table-glow';
+      // We'll create rows as pairs using our grid style
+      const wrapper = document.createElement('div');
+      wrapper.style.marginTop = '8px';
+      Object.entries(obj).forEach(([k, v]) => {
+        const pair = document.createElement('div');
+        pair.className = 'table-row-pair';
+        const keyEl = document.createElement('div');
+        keyEl.className = 'k';
+        keyEl.textContent = k;
+        const valEl = document.createElement('div');
+        valEl.className = 'v';
+        // show objects/arrays as JSON strings
+        if (v === null || v === undefined) valEl.textContent = '';
+        else if (typeof v === 'object') valEl.textContent = JSON.stringify(v);
+        else valEl.textContent = String(v);
+        pair.appendChild(keyEl);
+        pair.appendChild(valEl);
+        wrapper.appendChild(pair);
+      });
+      tbl.appendChild(wrapper);
+      return tbl;
+    }
+
+    // --- Render data as "ROW" tables (one table per object) ---
+    function renderRowTables(data) {
+      // data can be object or array or primitive
+      const container = document.createElement('div');
+      if (data == null) {
+        const p = document.createElement('div'); p.className = 'small-meta'; p.textContent = 'No data';
+        container.appendChild(p);
+        return container;
+      }
+      if (!Array.isArray(data)) data = [data];
+      data.forEach(item => {
+        const tableEl = renderRowTable(item);
+        container.appendChild(tableEl);
+      });
+      return container;
+    }
+
+    // --- showResult: displays message + row tables or error text ---
+    function showResult(el, ok, msg, payload) {
+      el.style.display = 'block';
+      el.className = 'result ' + (ok ? 'success' : 'error');
+
+      // Title / message
+      const title = document.createElement('div');
+      title.innerHTML = `<strong>${msg}</strong>`;
+      // Clear and append
+      el.innerHTML = '';
+      el.appendChild(title);
+
+      // Determine payload to render:
+      // payload might be: {json}, or plain text, or an Error-object
+      let data = null;
+      let errorMsg = null;
+
+      if (payload && typeof payload === 'object' && payload !== null) {
+        // If it's an error-shaped object { error: '...' } prefer that message
+        if ('error' in payload && Object.keys(payload).length === 1) {
+          errorMsg = String(payload.error);
+        } else if ('customer' in payload && typeof payload.customer === 'object') {
+          data = payload.customer;
+        } else {
+          data = payload;
+        }
+      } else if (typeof payload === 'string') {
+        // try parse JSON text
+        try { data = JSON.parse(payload); } catch (e) { errorMsg = payload; }
+      }
+
+      if (errorMsg) {
+        const errDiv = document.createElement('div');
+        errDiv.style.marginTop = '8px';
+        errDiv.style.color = 'var(--muted)';
+        errDiv.textContent = errorMsg;
+        el.appendChild(errDiv);
+      } else if (data != null) {
+        // render as row tables (one per object)
+        const nodes = renderRowTables(data);
+        el.appendChild(nodes);
+      } else {
+        const info = document.createElement('div');
+        info.className = 'small-meta';
+        info.textContent = '(No detailed payload)';
+        el.appendChild(info);
+      }
+    }
+
+    // --- Utilities for POST wrapper used everywhere ---
+    async function apiPost(url, data) {
+      const payload = JSON.stringify(data);
+      const res = await fetchSafe(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: payload });
+      if (!res.ok) {
+        // If server returned JSON error object, throw that, else throw text
+        throw (res.json || { error: res.text || `Status ${res.status}` });
+      }
+      // success: return parsed json or fallback object with message/text
+      return res.json || { ok: true, message: res.text };
+    }
+
+    async function apiGet(url) {
+      const res = await fetchSafe(url);
+      if (!res.ok) throw (res.json || { error: res.text || `Status ${res.status}` });
+      return res.json || { ok: true, message: res.text };
+    }
+
+    // --- Login handling ---
+    const roleSelect = document.getElementById('role-select');
+    const adminFields = document.getElementById('admin-fields');
+    const customerFields = document.getElementById('customer-fields');
+    const resLogin = document.getElementById('res-login');
+    const topRight = document.getElementById('top-right');
+
+    roleSelect.addEventListener('change', () => {
+      if (roleSelect.value === 'admin') {
+        adminFields.style.display = ''; customerFields.style.display = 'none';
+      } else {
+        adminFields.style.display = 'none'; customerFields.style.display = '';
+      }
+    });
+
+    const session = JSON.parse(localStorage.getItem('ccms_session') || 'null');
+    function updateTopRight(){
+      topRight.innerHTML = '';
+      if (session && session.role) {
+        const span = document.createElement('div'); span.textContent = `${session.role.toUpperCase()} ${session.username||session.phone||''}`;
+        const btn = document.createElement('button'); btn.textContent='Logout';
+        btn.onclick = () => { localStorage.removeItem('ccms_session'); location.reload(); };
+        topRight.appendChild(span); topRight.appendChild(btn);
+      }
+    }
+    updateTopRight();
+
+    function showPanelForSession(){
+      if (!session) {
+        document.getElementById('panel-login').style.display='block';
+        document.getElementById('panel-dashboard').style.display='none';
+        document.getElementById('panel-access').style.display='none';
+        return;
+      }
+      document.getElementById('panel-login').style.display='none';
+      if (session.role === 'admin'){
+        document.getElementById('panel-dashboard').style.display='block';
+        document.getElementById('panel-access').style.display='none';
+      } else {
+        document.getElementById('panel-dashboard').style.display='none';
+        document.getElementById('panel-access').style.display='block';
+        document.getElementById('access-msg').textContent = `Hello ${session.name || session.phone}. Access Granted — click Start Browsing to open Google.`;
+      }
+    }
+    showPanelForSession();
+
+    document.getElementById('form-login').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      resLogin.style.display='none';
+      const role = roleSelect.value;
+      try {
+        if (role === 'admin') {
+          const username = document.getElementById('admin-username').value.trim();
+          const password = document.getElementById('admin-password').value.trim();
+          const j = await apiPost('/api/login', { role:'admin', username, password });
+          localStorage.setItem('ccms_session', JSON.stringify({ role:'admin', username: j.username || j.username }));
+          location.reload();
+        } else {
+          const phone = document.getElementById('cust-phone').value.trim();
+          const password = document.getElementById('cust-password').value.trim();
+          const j = await apiPost('/api/login', { role:'customer', phone, password });
+          localStorage.setItem('ccms_session', JSON.stringify({ role:'customer', phone: j.phone, name: j.name, customer_id: j.customer_id }));
+          location.reload();
+        }
+      } catch (err) {
+        showResult(resLogin, false, err.error ? 'Login failed' : 'Login failed', err);
+      }
+    });
+
+    // Access page
+    document.getElementById('start-browse').addEventListener('click', () => { window.open('https://google.com', '_blank'); });
+    document.getElementById('logout-btn-1').addEventListener('click', () => { localStorage.removeItem('ccms_session'); location.reload(); });
+
+    // Admin dashboard tab switching
+    const dashTabs = document.querySelectorAll('#dashboard-tabs .tab');
+    const dashPanels = { add: document.getElementById('dash-add'), rate: document.getElementById('dash-rate'), bill: document.getElementById('dash-bill'), view: document.getElementById('dash-view') };
+    dashTabs.forEach(t => t.addEventListener('click', () => {
+      dashTabs.forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+      const key = t.dataset.tab;
+      Object.entries(dashPanels).forEach(([k, el]) => el.style.display = (k===key)?'block':'none');
+    }));
+
+    // Add Customer (admin)
+    document.getElementById('form-add').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const f = e.target; const data = Object.fromEntries(new FormData(f).entries());
+      const res = document.getElementById('res-add'); res.style.display='none';
+      try {
+        const j = await apiPost('/api/customers', data);
+        showResult(res, true, 'Customer added successfully.', j);
+        f.reset();
+      } catch (err) {
+        showResult(res, false, err.error || 'Failed to add customer.', err);
+      }
+    });
+
+    // Set Rate
+    document.getElementById('form-rate').addEventListener('submit', async (e) => {
+      e.preventDefault(); const f = e.target; const data = Object.fromEntries(new FormData(f).entries()); const res = document.getElementById('res-rate'); res.style.display='none';
+      try {
+        const j = await apiPost('/api/rate', { rate: data.rate });
+        showResult(res, true, 'Rate updated.', j);
+        f.reset();
+      } catch (err) {
+        showResult(res, false, err.error || 'Failed to update rate.', err);
+      }
+    });
+
+    // Generate Bill
+    document.getElementById('form-bill').addEventListener('submit', async (e) => {
+      e.preventDefault(); const f = e.target; const data = Object.fromEntries(new FormData(f).entries()); const res = document.getElementById('res-bill'); res.style.display='none';
+      try {
+        const j = await apiPost('/api/bill', { Phone_no: data.Phone_no, Time_accessed_in_min: Number(data.Time_accessed_in_min) });
+        showResult(res, true, `Bill generated: ₹${j.Total} (₹${j.Rate}/min × ${j.Minutes} min)`, j);
+        f.reset();
+      } catch (err) {
+        showResult(res, false, err.error || 'Failed to generate bill.', err);
+      }
+    });
+
+    // View Customer
+    document.getElementById('form-view').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const f = e.target; const data = Object.fromEntries(new FormData(f).entries());
+      const res = document.getElementById('res-view'); res.style.display='none';
+      try {
+        const j = await apiGet(`/api/customers?phone=${encodeURIComponent(data.phone)}`);
+        showResult(res, true, 'Customer found.', j);
+      } catch (err) {
+        showResult(res, false, err.error || 'Customer not found.', err);
+      }
+    });
+
+    // Logout (admin)
+    document.getElementById('logout-btn-2').addEventListener('click', () => { localStorage.removeItem('ccms_session'); location.reload(); });
+
+  </script>
+</body>
+</html>
