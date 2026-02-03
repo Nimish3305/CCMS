@@ -1,6 +1,6 @@
-Cyber Café Management System (CCMS)
+Cyber CafÃ© Management System (CCMS)
 Overview
-The Cyber Café Management System (CCMS) is a web-based academic project designed to automate and digitalize daily cyber café operations such as customer management, session tracking, billing, and reporting. The system emphasizes strong DBMS design principles and HCI usability concepts to ensure accuracy, efficiency, and ease of use.
+The Cyber CafÃ© Management System (CCMS) is a web-based academic project designed to automate and digitalize daily cyber cafÃ© operations such as customer management, session tracking, billing, and reporting. The system emphasizes strong DBMS design principles and HCI usability concepts to ensure accuracy, efficiency, and ease of use.
 This project was developed as part of the DBMS and HCI coursework.
 
 Tech Stack
@@ -48,7 +48,7 @@ Software Requirements
 
 Installation & Execution Instructions
 Step 1: Clone the Repository
-git clone https://github.com/your-username/cyber-cafe-management-system.git
+git clone https://github.com/Nimish3305/cyber-cafe-management-system.git
 cd cyber-cafe-management-system
 
 Step 2: Database Setup
@@ -81,7 +81,16 @@ Step 5: Access the System
 * Customer Login: Start sessions and access services
 
 Default Credentials (Demo)
-RoleUsernamePasswordAdminadminadmin123Customerdemodemo123Note: Change credentials after first login.
+Role
+Username
+Password
+Admin
+admin
+admin123
+Customer
+demo
+demo123
+Note: Change credentials after first login.
 
 Project Structure
 ccms/
@@ -106,9 +115,10 @@ Academic Information
 * Course: DBMS & HCI
 * Department: Computer Engineering
 * Institute: Pimpri Chinchwad College of Engineering & Research, Pune
-* Project Guide: Mrs. Sonali Lunawat
+* Project Guide: Mrs.Â Sonali Lunawat
 
 Authors
 * Nimish Khairnar
 * Vaishnav Pawar
 * Aditya Sutar
+
